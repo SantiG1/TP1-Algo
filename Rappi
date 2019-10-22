@@ -1,0 +1,119 @@
+import random
+
+l_rappitenderos = []
+l_restaurantes = []
+l_clientes = []
+l_pedido = []
+def menu_principal():
+    print("Bienvenido")
+    opcion = -1
+    minimo = 0
+    maximo = 5
+    while opcion != 0:
+        print("1. Carga de datos predefinidos")
+        print("2. Carga de nuevos datos")
+        print("3. Pedido manual")
+        print("4. Simulacion de pedidos")
+        print("5. Informes")
+        opcion = verif_opcion(minimo, maximo)
+        if opcion != 0:
+            derivar_opcion(opcion)
+    print("¡Hasta luego!")
+
+def submenu_cargar_info_manual():
+    opcion = -1
+    minimo = 0
+    maximo = 4
+    while opcion != 0:
+        print("1. Cargar nuevo restaurante")
+        print("2. Cargar nuevo plato")
+        print("3. Cargar nuevo cliente")
+        print("4. Cargar nuevo rappitendero")
+        opcion = verif_opcion(minimo, maximo)
+        if opcion != 0:
+            opcion += 5
+            derivar_opcion(opcion)
+
+def submenu_informes():
+    opcion = -1
+    minimo = 0
+    maximo = 3
+    while opcion != 0:
+        print("1. Clientes con mayor cantidad de Rappicreditos")
+        print("2. Rappitenderos con mayor propina acumulada")
+        print("3. Restaurantes con mas ventas")
+        opcion = verif_opcion(minimo, maximo)
+        if opcion != 0:
+            opcion += 9
+            derivar_opcion(opcion)
+
+def verif_opcion(minimo, maximo):
+    opcion = int(input("Seleccione la opcion que desee realizar. 0 para salir del menu: "))
+    while opcion < minimo or opcion > maximo:
+        opcion = int(input("Seleccione una opcion valida: "))
+    return opcion
+
+def derivar_opcion(opcion):
+    if opcion == 1:
+        l_restaurantes, l_rappitenderos, l_clientes += cargar_info_predefinida()
+    elif opcion == 2:
+        submenu_cargar_info_manual()
+    elif opcion == 3:
+        l_pedido = pedido_manual(l_restaurantes, l_rappitenderos, l_clientes)
+    elif opcion == 4:
+        simulacion_pedido()
+    elif opcion == 5:
+        submenu_informes()
+    elif opcion == 6:
+        cargar_nuevo_restaurante()
+    elif opcion == 7:
+        cargar_nuevo_plato()
+    elif opcion == 8:
+        cargar_nuevo_cliente()
+    elif opcion == 9:
+        cargar_nuevo_rappitendero()
+    elif opcion == 10:
+        mayor_cant_creditos()
+    elif opcion == 11:
+        rappi_mayor_propina()
+    else:
+        rest_mas_ventas()
+
+def info_hardcodeada():
+    hardcodeada = [[{"Nombre": "McDonald's", "Direccion": "Independencia 1700", "Telefono": "11-2445-1234", "Posicion":(22.0,10.0), "Radio de entrega": 2.5 , "Platos": [{"Nombre": "Cuarto de Libra" , "Precio": 195.0}, {"Nombre": "McNuggets", "Precio": 215.0 }, {"Nombre": "Big Mac", "Precio": 200.0}, {"Nombre": "Ensalada Caesar", "Precio": 270.0}], "Total de ventas": 0.0},
+    {"Nombre": "Parripollo Lo de Cesar" , "Direccion": "Coronel Montenegro 1250" , "Telefono": "11-7491-2670", "Posicion":(5.0,19.0), "Radio de entrega": 1.0, "Platos": [{"Nombre": "Pollo al Spiedo", "Precio": 290.0}, {"Nombre": "Pata", "Precio": 35.0}, {"Nombre": "Pechuga", "Precio": 110.0}, {"Nombre": "Porcion de Fritas", "Precio": 70.0}, {"Nombre": "Coca Cola", "Precio": 85.0}], "Total de ventas": 0.0},
+    {"Nombre": "Lo de Carlitos" , "Direccion": "Posta de Pardo 700" , "Telefono": "11-6495-8744", "Posicion":(-15.0,-9.0), "Radio de entrega": 2.0, "Platos": [{"Nombre": "Panqueque ddl", "Precio": 170.0}, {"Nombre": "Hamburguesa completa", "Precio": 210.0}, {"Nombre": "Papas Fritas", "Precio": 120.0}, {"Nombre": "Fanta", "Precio": 75.0}, {"Nombre": "Heineken", "Precio": 130.0}], "Total de ventas": 0.0},
+    {"Nombre": "Cerveceria Antares" , "Direccion": "Quirno Acosta 324", "Telefono": "11-1645-5987", "Posicion":(7.0,-4.2), "Radio de entrega": 1.0, "Platos": [{"Nombre": "Honey", "Precio": 165.0}, {"Nombre": "Ipa", "Precio": 165.0}, {"Nombre": "Porter", "Precio": 165.0}, {"Nombre": "Papas Rusticas", "Precio": 195.0}, {"Nombre": "Rabas", "Precio": 350.0}, {"Nombre": "Choricitos al vino", "Precio": 420.0}], "Total de ventas": 0.0},
+    {"Nombre": "Green eat", "Direccion": "Alpinos", "Telefono": "11-6135-3544", "Posicion":(-20.0,13.0), "Radio de entrega": 2.0, "Platos": [{"Nombre": "Tofu", "Precio": 95.0}, {"Nombre": "Sopa", "Precio": 140.0}, {"Nombre": "Ensalada", "Precio": 130.0}, {"Nombre": "Hummus", "Precio": 400.0}, {"Nombre": "Leche de soya", "Precio": 120.0}, {"Nombre": "Leche de almendras", "Precio": 160.0}], "Total de ventas": 0.0},
+    {"Nombre": "El Bar de Moe", "Direccion": "Av. Siempre Viva 742", "Telefono": "11-6673-5524", "Posicion":(15.0,-15.0), "Radio de entrega": 2.0, "Platos": [{"Nombre": "Duff", "Precio": 110.0}, {"Nombre": "Quilmes", "Precio": 105.0}, {"Nombre": "Llamarada Moe", "Precio": 120.0}, {"Nombre": "Destornillador", "Precio": 135.0}, {"Nombre": "El Fernet de Moe", "Precio": 150.0}], "Total de ventas": 0.0}],
+    [{"Nombre": "Agustin Firmapaz", "Propina acumulada": 0.0, "Posicion actual": [0.0,0.0], "Pedido actual": {"Platos":[], "Destino": None}},
+    {"Nombre": "Tomas Troglio", "Propina acumulada": 0.0, "Posicion actual": [0.0,0.0], "Pedido actual": {"Platos":[], "Destino": None}},
+    {"Nombre": "Erik Anrique", "Propina acumulada": 0.0, "Posicion actual": [0.0,0.0], "Pedido actual": {"Platos":[], "Destino": None}},
+    {"Nombre": "Santiago Gomez", "Propina acumulada": 0.0, "Posicion actual": [0.0,0.0], "Pedido actual": {"Platos":[], "Destino": None}},
+    {"Nombre": "Benito Sanchez", "Propina acumulada": 0.0, "Posicion actual": [0.0,0.0], "Pedido actual": {"Platos":[], "Destino": None}}],
+    [{"Nombre": "Juancito123", "Contrasenia": "JuanK-po99", "Telefono": "11-7986-4012", "Direccion": "Alcorta 587", "Posicion": (-5.0,-5.8), "Rappicreditos": 0.0},
+    {"Nombre": "Martita96", "Contrasenia": "Hipotenusa_34", "Telefono": "11-4615-7010", "Direccion": "9 de Julio 1795", "Posicion": (8.0,-17.0), "Rappicreditos": 0.0},
+    {"Nombre": "Mirko42", "Contrasenia": "YngMirk_420", "Telefono": "11-6352-4871", "Direccion": "Av. Corrientes 735", "Posicion": (0.0,6.3), "Rappicreditos": 0.0},
+    {"Nombre": "NatalyPortman", "Contrasenia": "pechugasLaru-6", "Telefono": "11-3569-2305", "Direccion": "Almirante Brown 215", "Posicion": (4.9,20.0), "Rappicreditos": 0.0},
+    {"Nombre": "FedeRico74", "Contrasenia": "C-ontrasenia01", "Telefono": "11-5862-4799", "Direccion": "Av. Libertador 1369", "Posicion": (-2.0,5.0), "Rappicreditos": 0.0}]]
+    return hardcodeada
+
+def cargar_info_predefinida(cargado):
+    l_restaurantes = []
+    l_rappitenderos = []
+    l_restaurantes = []
+    if cargado != True:
+        info_predefinida = info_hardcodeada()
+        l_restaurantes = info_predefinida[0]
+        l_rappitenderos = info_predefinida[1]
+        l_clientes = info_predefinida[2]
+        for rappitendero in l_rappitenderos:
+            rappitendero["Posicion actual"] = l_restaurantes[random.randrange(len(l_restaurantes))]["Posicion"]
+        cargado = True
+    else:
+        print("Estos datos ya han sido cargados")
+    return l_restaurantes, l_rappitenderos, l_clientes, cargado
+#Falta ver como hacer para que, si esta funcion se usa dos veces, no se repita la informacion
+menu_principal()
+
+
